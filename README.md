@@ -10,7 +10,7 @@
 git clone https://github.com/AL1US/g-cli
 cd g-cli
 ```
-Запускаем
+2. Запускаем
 ```bash
 chmod +x install.sh
 ./install.sh
