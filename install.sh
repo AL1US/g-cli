@@ -36,7 +36,7 @@ case "$CMD" in
 
         # Создаем README.md, если его нет
         if [ ! -f "README.md" ]; then
-            echo "# Мой Проект" > README.md
+            echo "# README" > README.md
         fi
 
         echo "Инициализация репозитория..."
