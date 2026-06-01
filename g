@@ -2,11 +2,9 @@
 
 print_help() {
     echo "Использование утилиты 'g':"
-    echo "  g <сообщение>       - Добавить всё, закоммитить и запушить в текущую ветку"
+    echo "  g <сообщение>       - Добавить всё (add .), закоммитить и запушить в текущую ветку"
     echo "  g init [<repo_url>] - Инициализировать репозиторий, создать README и запушить"
-    echo "  g add ...           - Проброс команды git add"
-    echo "  g commit ...        - Проброс команды git commit"
-    echo "  g push ...          - Проброс команды git push"
+    echo "  g <команда>         - Проброс стандартных команд git (status, pull, clone, log и др.)"
     echo "  g help              - Показать эту справку"
 }
 
@@ -43,7 +41,7 @@ case "$CMD" in
         
         # Создаем README, если его нет
         if [ ! -f "README.md" ]; then 
-            # Берет название текущей папки в качестве заголовка
+            # В качестве заголовка берем название текущей папки
             echo "# $(basename "$PWD")" > README.md
         fi
         
@@ -56,8 +54,9 @@ case "$CMD" in
         echo "✅ Готово!"
         ;;
     
-    add|commit|push)
-        # Пробрасываем напрямую в git
+    # Белый список всех основных команд Git
+    add|commit|push|pull|status|clone|checkout|branch|merge|rebase|stash|log|reset|fetch|tag|rm|mv|show|diff|grep)
+        # Пробрасываем аргументы напрямую в git
         git "$@"
         ;;
         
@@ -66,12 +65,14 @@ case "$CMD" in
         ;;
         
     *)
-        # Все аргументы собираются в строку коммита
+        # Если команда не из белого списка, собираем все аргументы в строку коммита
         MESSAGE="$*"
         confirm "Выполнить commit и push с сообщением: '$MESSAGE'?"
         
         git add .
         git commit -m "$MESSAGE"
+        
+        # Определяем текущую ветку и пушим в неё
         BRANCH=$(git rev-parse --abbrev-ref HEAD)
         git push origin "$BRANCH"
         echo "✅ Готово!"
